@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <string name="app_name" translatable="false">CampusExpenseManager</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">登录</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="change_password">更改密码</string>
+    <string name="login_successful">登录成功！</string>
+    <string name="invalid_login">用户名或密码无效</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">注册</string>
+    <string name="email">电子邮件</string>
+    <string name="register_successful">注册成功</string>
+    <string name="register_failed">注册失败</string>
+    <string name="username_exists">用户名已存在</string>
+    <string name="email_exists">电子邮件已注册</string>
+    <string name="enter_all_fields">请填写完整信息</string>
+    <string name="valid_email">请输入有效的电子邮件</string>
+    <string name="password_length">密码至少6个字符</string>
+
+    <!-- Change Password Screen -->
+    <string name="old_password">旧密码</string>
+    <string name="new_password">新密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="password_mismatch">确认密码不匹配</string>
+    <string name="password_changed">密码更改成功</string>
+    <string name="password_change_failed">更改密码时出错</string>
+
+    <!-- Profile Screen -->
+    <string name="dark_mode">黑暗模式</string>
+    <string name="logout">登出</string>
+    <string name="select_currency">选择货币</string>
+
+    <!-- Home Screen -->
+    <string name="total_income">总收入: </string>
+    <string name="total_expense">总支出: </string>
+    <string name="balance">余额: </string>
+
+    <!-- Transaction Screen -->
+    <string name="transaction_history">交易记录</string>
+    <string name="language">xxx</string>
+</resources>

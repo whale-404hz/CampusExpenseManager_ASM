@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">CampusExpenseManager</string>
+    <!-- Login Screen -->
+    <string name="login_title">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="change_password">Change Password</string>
+    <string name="login_successful">Login Successful!</string>
+    <string name="invalid_login">Invalid username or password</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">Register</string>
+    <string name="email">Email</string>
+    <string name="register_successful">Registration successful</string>
+    <string name="register_failed">Registration failed</string>
+    <string name="username_exists">Username already exists</string>
+    <string name="email_exists">Email already registered</string>
+    <string name="enter_all_fields">Please enter complete information</string>
+    <string name="valid_email">Please enter a valid email</string>
+    <string name="password_length">Password must be at least 6 characters</string>
+
+    <!-- Change Password Screen -->
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_mismatch">Confirmation password does not match</string>
+    <string name="password_changed">Password changed successfully</string>
+    <string name="password_change_failed">Error changing password</string>
+
+    <!-- Profile Screen -->
+    <string name="dark_mode">Dark Mode</string>
+    <string name="logout">Logout</string>
+    <string name="select_currency">Select Currency</string>
+
+    <!-- Home Screen -->
+    <string name="total_income">Total Income: </string>
+    <string name="total_expense">Total Expense: </string>
+    <string name="balance">Balance: </string>
+
+    <!-- Transaction Screen -->
+    <string name="transaction_history">Transaction History</string>
+    <string name="language">Language</string>
+</resources>

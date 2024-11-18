@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <string name="app_name" translatable="false">CampusExpenseManager</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Đăng nhập</string>
+    <string name="username">Tên đăng nhập</string>
+    <string name="password">Mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="login_successful">Đăng nhập thành công!</string>
+    <string name="invalid_login">Tên đăng nhập hoặc mật khẩu không đúng</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">Đăng ký</string>
+    <string name="email">Email</string>
+    <string name="register_successful">Đăng ký thành công</string>
+    <string name="register_failed">Đăng ký thất bại</string>
+    <string name="username_exists">Tên đăng nhập đã tồn tại</string>
+    <string name="email_exists">Email đã được đăng ký</string>
+    <string name="enter_all_fields">Vui lòng điền đầy đủ thông tin</string>
+    <string name="valid_email">Vui lòng nhập email hợp lệ</string>
+    <string name="password_length">Mật khẩu phải có ít nhất 6 ký tự</string>
+
+    <!-- Change Password Screen -->
+    <string name="old_password">Mật khẩu cũ</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="password_changed">Đổi mật khẩu thành công</string>
+    <string name="password_change_failed">Lỗi khi đổi mật khẩu</string>
+
+    <!-- Profile Screen -->
+    <string name="dark_mode">Chế độ tối</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="select_currency">Chọn đơn vị tiền tệ</string>
+
+    <!-- Home Screen -->
+    <string name="total_income">Tổng thu nhập: </string>
+    <string name="total_expense">Tổng chi tiêu: </string>
+    <string name="balance">Số dư: </string>
+
+    <!-- Transaction Screen -->
+    <string name="transaction_history">Lịch sử giao dịch</string>
+    <string name="language">"Ngôn ngữ "</string>
+</resources>
