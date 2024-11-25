@@ -45,4 +45,6 @@
     <!-- Transaction Screen -->
     <string name="transaction_history">交易记录</string>
     <string name="language">xxx</string>
+    <string name="back" />
+    <string name="settings" />
 </resources>

@@ -45,4 +45,6 @@
     <!-- Transaction Screen -->
     <string name="transaction_history">Lịch sử giao dịch</string>
     <string name="language">"Ngôn ngữ "</string>
+    <string name="back" />
+    <string name="settings" />
 </resources>
