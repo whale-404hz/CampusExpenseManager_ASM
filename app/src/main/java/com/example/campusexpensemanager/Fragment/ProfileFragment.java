@@ -31,6 +31,7 @@ import com.example.campusexpensemanager.Helper.TransactionHelper;
 import com.example.campusexpensemanager.Helper.UserHelper;
 import com.example.campusexpensemanager.Login;
 import com.example.campusexpensemanager.R;
+import com.example.campusexpensemanager.SettingsActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +46,7 @@ public class ProfileFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private CircleImageView ivAvatar;
     private TextView tvUsername;
-    private Button btnChangeAvatar, btnLogout;
+    private Button btnChangeAvatar, btnLogout, btnSettings;
     private Switch switchDarkMode;
     private Spinner spinnerCurrency, spinnerLanguage;
 
@@ -58,33 +59,56 @@ public class ProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate layout
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        ivAvatar = view.findViewById(R.id.ivAvatar);
-        tvUsername = view.findViewById(R.id.tvUsername);
-        btnChangeAvatar = view.findViewById(R.id.btnChangeAvatar);
-        btnLogout = view.findViewById(R.id.btnLogout);
-        switchDarkMode = view.findViewById(R.id.switchDarkMode);
-        spinnerCurrency = view.findViewById(R.id.spinnerCurrency);
-        spinnerLanguage = view.findViewById(R.id.spinnerLanguage);
+        // Initialize UI components
+        initUI(view);
 
-        userHelper = new UserHelper(requireActivity());
-        auth = new Auth(requireActivity());
-        currencyHelper = new CurrencyHelper(requireActivity());
-        transactionHelper = new TransactionHelper(requireActivity());
+        // Initialize helpers
+        initHelpers();
 
-        userId = auth.getUserId();
-
+        // Load user data and setup views
         loadUserInfo();
         initializeCurrencySpinner();
         setupLanguageSpinner();
         setupDarkModeSwitch();
 
-        btnChangeAvatar.setOnClickListener(v -> openImagePicker());
-        btnLogout.setOnClickListener(v -> logout());
+        // Setup button click listeners
+        setupListeners();
 
         return view;
     }
+
+    private void initUI(View view) {
+        ivAvatar = view.findViewById(R.id.ivAvatar);
+        tvUsername = view.findViewById(R.id.tvUsername);
+        btnChangeAvatar = view.findViewById(R.id.btnChangeAvatar);
+        btnLogout = view.findViewById(R.id.btnLogout);
+        btnSettings = view.findViewById(R.id.btn_settings);
+        switchDarkMode = view.findViewById(R.id.switchDarkMode);
+        spinnerCurrency = view.findViewById(R.id.spinnerCurrency);
+        spinnerLanguage = view.findViewById(R.id.spinnerLanguage);
+    }
+
+    private void initHelpers() {
+        userHelper = new UserHelper(requireActivity());
+        auth = new Auth(requireActivity());
+        currencyHelper = new CurrencyHelper(requireActivity());
+        transactionHelper = new TransactionHelper(requireActivity());
+        userId = auth.getUserId();
+    }
+
+    private void setupListeners() {
+        btnChangeAvatar.setOnClickListener(v -> openImagePicker());
+        btnLogout.setOnClickListener(v -> logout());
+        btnSettings.setOnClickListener(v -> openSettings());
+    }
+    private void openSettings() {
+        Intent intent = new Intent(requireContext(), SettingsActivity.class);
+        startActivity(intent);
+    }
+
 
     private void loadUserInfo() {
         String username = userHelper.getUsernameById(userId);
@@ -105,7 +129,7 @@ public class ProfileFragment extends Fragment {
 
     private void initializeCurrencySpinner() {
         List<String> currencies = currencyHelper.getAllCurrencies();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencies);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, currencies);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCurrency.setAdapter(adapter);
 
@@ -128,10 +152,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void updateTransactionAmounts(String newCurrency) {
-        transactionHelper.updateTransactionsToCurrency(newCurrency);
-    }
-
     private void setupDarkModeSwitch() {
         boolean isDarkModeEnabled = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("dark_mode", false);
@@ -144,38 +164,6 @@ public class ProfileFragment extends Fragment {
             AppCompatDelegate.setDefaultNightMode(isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
             requireActivity().recreate();
         });
-    }
-
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == requireActivity().RESULT_OK && data != null && data.getData() != null) {
-            Uri selectedImageUri = data.getData();
-            try {
-                InputStream inputStream = requireActivity().getContentResolver().openInputStream(selectedImageUri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                inputStream.close();
-                ivAvatar.setImageBitmap(bitmap);
-                userHelper.updateUserAvatar(userId, bitmap);
-                Toast.makeText(requireActivity(), "Avatar updated successfully", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(requireActivity(), "Error while selecting image", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void logout() {
-        auth.logout();
-        Intent intent = new Intent(requireContext(), Login.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        requireActivity().finish();
     }
 
     private void setupLanguageSpinner() {
@@ -219,5 +207,41 @@ public class ProfileFragment extends Fragment {
         Configuration config = new Configuration();
         config.setLocale(locale);
         requireContext().getResources().updateConfiguration(config, requireContext().getResources().getDisplayMetrics());
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == requireActivity().RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            try {
+                InputStream inputStream = requireActivity().getContentResolver().openInputStream(selectedImageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                inputStream.close();
+                ivAvatar.setImageBitmap(bitmap);
+                userHelper.updateUserAvatar(userId, bitmap);
+                Toast.makeText(requireActivity(), "Avatar updated successfully", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(requireActivity(), "Error while selecting image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void logout() {
+        auth.logout();
+        Intent intent = new Intent(requireContext(), Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        requireActivity().finish();
+    }
+
+    private void updateTransactionAmounts(String newCurrency) {
+        transactionHelper.updateTransactionsToCurrency(newCurrency);
     }
 }
