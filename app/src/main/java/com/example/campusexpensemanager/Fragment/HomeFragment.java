@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
         // Map views from XML
         totalIncomeView = view.findViewById(R.id.textViewTotalIncome);
         totalExpenseView = view.findViewById(R.id.textViewTotalExpense);
-        balanceView = view.findViewById(R.id.textViewBalance);
+
         pieChart = view.findViewById(R.id.pieChart);
         loadingAnimation = view.findViewById(R.id.lottieLoading); // Add Lottie view in XML
 
