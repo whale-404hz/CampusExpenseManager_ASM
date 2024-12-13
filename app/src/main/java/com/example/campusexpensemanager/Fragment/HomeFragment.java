@@ -18,10 +18,16 @@ import com.example.campusexpensemanager.Helper.ExpenseHelper;
 import com.example.campusexpensemanager.Helper.IncomeHelper;
 import com.example.campusexpensemanager.Helper.UserHelper;
 import com.example.campusexpensemanager.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONObject;
@@ -38,7 +44,7 @@ public class HomeFragment extends Fragment {
     private CurrencyHelper currencyHelper;
 
     private TextView totalIncomeView, totalExpenseView, balanceView;
-    private PieChart pieChart;
+    private BarChart barChart;
     private LottieAnimationView loadingAnimation;
 
     private int userId = -1;
@@ -60,7 +66,7 @@ public class HomeFragment extends Fragment {
         totalIncomeView = view.findViewById(R.id.textViewTotalIncome);
         totalExpenseView = view.findViewById(R.id.textViewTotalExpense);
 
-        pieChart = view.findViewById(R.id.pieChart);
+        barChart = view.findViewById(R.id.barChart);
         loadingAnimation = view.findViewById(R.id.lottieLoading); // Add Lottie view in XML
 
         // Get user ID from SharedPreferences
@@ -131,7 +137,6 @@ public class HomeFragment extends Fragment {
 
         double incomeInSelectedCurrency = totalIncome * exchangeRate;
         double expenseInSelectedCurrency = totalExpense * exchangeRate;
-        double balanceInSelectedCurrency = incomeInSelectedCurrency - expenseInSelectedCurrency;
 
         Locale locale = getLocaleForCurrency(selectedCurrency);
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
@@ -139,16 +144,17 @@ public class HomeFragment extends Fragment {
 
         totalIncomeView.setText(String.format("Total Income: %s", currencyFormat.format(incomeInSelectedCurrency)));
         totalExpenseView.setText(String.format("Total Expense: %s", currencyFormat.format(expenseInSelectedCurrency)));
-        balanceView.setText(String.format("Balance: %s", currencyFormat.format(balanceInSelectedCurrency)));
+        balanceView.setText(String.format("Balance: %s", currencyFormat.format(balance)));
 
         if (incomeInSelectedCurrency > 0 || expenseInSelectedCurrency > 0) {
-            updatePieChart(incomeInSelectedCurrency, expenseInSelectedCurrency);
+            updateBarChart(incomeInSelectedCurrency, expenseInSelectedCurrency);
         } else {
-            pieChart.clear();
-            pieChart.setCenterText("No data available");
-            pieChart.setCenterTextColor(ColorTemplate.COLOR_SKIP);
+            barChart.clear();
+            barChart.setNoDataText("No data available");
+            barChart.invalidate();
         }
     }
+
 
     private Locale getLocaleForCurrency(String currencyCode) {
         switch (currencyCode) {
@@ -167,20 +173,35 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void updatePieChart(double income, double expense) {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry((float) income, "Income"));
-        entries.add(new PieEntry((float) expense, "Expense"));
+    private void updateBarChart(double income, double expense) {
+        // Prepare BarChart entries
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(0f, (float) income)); // Income at X=0
+        entries.add(new BarEntry(1f, (float) expense)); // Expense at X=1
 
-        PieDataSet dataSet = new PieDataSet(entries, "Financial Overview");
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        // Create dataset
+        BarDataSet dataSet = new BarDataSet(entries, "Financial Overview");
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Set colors
+        dataSet.setValueTextSize(12f); // Set text size for values
 
-        PieData data = new PieData(dataSet);
-        pieChart.setData(data);
-        pieChart.setUsePercentValues(true);
-        pieChart.setEntryLabelTextSize(12f);
-        pieChart.invalidate();
+        // Attach dataset to BarData
+        BarData data = new BarData(dataSet);
+        barChart.setData(data);
+
+        // Customize BarChart
+        barChart.getDescription().setEnabled(false); // Remove description text
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(new String[]{"Income", "Expense"})); // Set labels
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM); // Labels at the bottom
+        barChart.getXAxis().setGranularity(1f); // Ensure 1 unit between bars
+        barChart.getXAxis().setGranularityEnabled(true);
+        barChart.getAxisLeft().setAxisMinimum(0f); // Ensure y-axis starts at 0
+        barChart.getAxisRight().setEnabled(false); // Disable right y-axis
+        barChart.getLegend().setEnabled(true); // Display legend
+
+        // Refresh the chart
+        barChart.invalidate();
     }
+
 
     private int getUserIdFromSession() {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user_session", Context.MODE_PRIVATE);
